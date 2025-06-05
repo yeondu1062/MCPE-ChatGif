@@ -29,7 +29,7 @@ function connectHandle(ws: WebSocket, win: BrowserWindow) {
     if (msg === undefined || !msg.toLowerCase().startsWith(START_CMD)) return;
 
     const asciiPath = path.join(__dirname, '../asciis', msg.replace(START_CMD, ''));
-    if (!fs.existsSync(asciiPath)) { sendCommand(ws, `w @s §r§cCould not find the Gif`); return; }
+    if (!fs.existsSync(asciiPath)) { sendCommand(ws, `w @s §r§cCould not find the Gif.`); return; }
 
     runChatGif(ws, asciiPath);
   });
