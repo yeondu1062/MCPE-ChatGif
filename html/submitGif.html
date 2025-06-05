@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ChatGif - Submit</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+      :root {
+        --bg: #fafafa;
+        --text: #222;
+        --container: #fff;
+        --border: #bbb;
+        --focus: #666;
+        --ok-bg: #444;
+        --ok-hover: #222;
+        --cancel-bg: #ddd;
+        --cancel-hover: #bbb;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --text: #ddd;
+          --container: #222;
+          --border: #555;
+          --focus: #888;
+          --ok-bg: #333;
+          --ok-hover: #555;
+          --cancel-bg: #333;
+          --cancel-hover: #555;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .container {
+        background: var(--container);
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        width: 320px;
+        text-align: center;
+      }
+
+      h3 {
+        font-weight: 500;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+      }
+
+      input[type=text],
+      input[type=number] {
+        width: 100%;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        border: 1.8px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: none;
+        color: var(--text);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      input[type=text]:focus,
+      input[type=number]:focus {
+        outline: none;
+        border-color: var(--focus);
+        box-shadow: 0 0 6px var(--focus);
+      }
+
+      button {
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        margin: 0 8px;
+        min-width: 100px;
+        user-select: none;
+      }
+
+      #okBtn {
+        background-color: var(--ok-bg);
+        color: #fff;
+      }
+
+      #okBtn:hover {
+        background-color: var(--ok-hover);
+      }
+
+      #cancelBtn {
+        background-color: var(--cancel-bg);
+        color: var(--text);
+      }
+
+      #cancelBtn:hover {
+        background-color: var(--cancel-hover);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Enter the name of the Gif</h3>
+      <input id="folderName" type="text" placeholder="Folder name" autofocus />
+      <h3>Enter width</h3>
+      <input id="width" type="number" min="1" placeholder="Width" />
+      <h3>Enter height</h3>
+      <input id="height" type="number" min="1" placeholder="Height" />
+      <div style="margin-top: 24px;">
+        <button id="okBtn">Submit</button>
+        <button id="cancelBtn">Cancel</button>
+      </div>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      window.addEventListener('DOMContentLoaded', async () => {
+        const d = await ipcRenderer.invoke('submit-default');
+        document.getElementById('folderName').value = d.name || '';
+        document.getElementById('width').value = d.width || '';
+        document.getElementById('height').value = d.height || '';
+      });
+
+      document.getElementById('okBtn').onclick = () => {
+        const name = document.getElementById('folderName').value.trim();
+        const w = +document.getElementById('width').value;
+        const h = +document.getElementById('height').value;
+
+        if (!name) return alert('Please enter a folder name.');
+        if (!w || w <= 0) return alert('Please enter a valid width.');
+        if (!h || h <= 0) return alert('Please enter a valid height.');
+
+        ipcRenderer.send('submit-chatgif', { name, w, h });
+      };
+
+      document.getElementById('cancelBtn').onclick = () => {
+        window.location.href = 'index.html';
+      };
+
+      ['folderName', 'width', 'height'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            document.getElementById('okBtn').click();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

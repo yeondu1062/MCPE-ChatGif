@@ -1,0 +1,36 @@
+{
+  "name": "chatgif",
+  "description": "A program that outputs gif animations through the chat window in Minecraft Bedrock",
+  "main": "build/chatGif.js",
+  "author": "yeondu1062",
+  "license": "MIT",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "tsc && electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/ws": "^8.18.1",
+    "electron": "^30.0.0",
+    "electron-builder": "^24.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "build": {
+    "appId": "com.yeondu1062.chatgif",
+    "productName": "ChatGif",
+    "asar": false,
+    "files": [
+      "asciis/**/*",
+      "build/**/*",
+      "html/**/*"
+    ]
+  },
+  "dependencies": {
+    "gif-frames": "^1.0.1",
+    "jimp": "^0.22.12",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.2"
+  }
+}
